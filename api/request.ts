@@ -1,7 +1,9 @@
+// import { APIRequest, request, Request} from '@playwright/test'
 import { JsonRequest } from "http-req-builder";
 import { ResponseValidator } from "response-openapi-validator";
 import { CONFIG } from "../config/env";
-import { allure } from 'allure-mocha/dist/MochaAllureReporter'
+// import { CookieJar } from "tough-cookie";
+// import { URLSearchParams } from "url";
 
 const responseValidator = new ResponseValidator({
     openApiSpecPath: CONFIG.PETSTORE_SWAGGER_URL,
@@ -23,35 +25,6 @@ export class JsonRequestWithValidation extends JsonRequest {
         super()
         this.options = {
             ...this.options,
-            hooks: {
-                afterResponse: [
-                    (response) => {
-                        const stepName = `[${response.statusCode}] ${this?.options?.method ?? 'GET'} ${this?.options?.url}`
-
-                        const step = allure.createStep(stepName, () => {
-                            if (this?.options?.json) {
-                                allure.createAttachment(
-                                    'JSON REQUEST BODY',
-                                    JSON.stringify(this?.options?.json, null, 2),
-                                    'application/json' as any
-                                )
-                            }
-
-                            if (response?.body) {
-                                allure.createAttachment(
-                                    'JSON RESPONSE BODY',
-                                    JSON.stringify(response?.body, null, 2),
-                                    'application/json' as any
-                                )
-                            }
-                        })
-
-                        step()
-
-                        return response
-                    }
-                ]
-            }
         }
     }
 
@@ -68,3 +41,42 @@ export class JsonRequestWithValidation extends JsonRequest {
         return response
     }
 }
+
+// export declare type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'HEAD' | 'DELETE' | 'OPTIONS' | 'TRACE' | 'get' | 'post' | 'put' | 'patch' | 'head' | 'delete' | 'options' | 'trace';
+
+// export class PwJsonRequest implements BaseHttpRequest {
+//     // @ts-ignore error!
+//     protected options: Parameters<APIRequest['newContext']>[0] = {};
+//     protected urlPath: string | URL = '';
+    
+//     body(body: any): this {
+//         throw new Error("Method not implemented.");
+//     }
+//     prefixUrl(url: string | URL): this {
+//         return this;
+//     }
+//     url(url: string | URL): this {
+//         return this;
+//     }
+//     cookieJar(cookiesJar: CookieJar): this {
+//         return this;
+//     }
+//     headers(headers: Record<string, string | undefined>): this {
+//         return this;
+//     }
+//     bearerToken(bearerToken?: string | undefined): this {
+//         return this;
+//     }
+//     searchParams(searchParams: string | Record<string, string | number | boolean | null | undefined> | URLSearchParams | undefined): this {
+//         return this;
+//     }
+//     method(method: Method): this {
+//         return this;
+//     }
+//     async send<T = any>(req?: Request) {
+//         const ctx = await request.newContext(this.options);
+//         if (req) ctx.fetch(req);
+
+//         await ctx.fetch(this.urlPath, this.options)
+//     }
+// }

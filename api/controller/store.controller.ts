@@ -1,10 +1,10 @@
 import { definitions, operations } from "../../.temp/types";
-import { AllureStep } from "../../utils/allureStep";
+import { STEP } from "../../utils/step";
 import { BaseController } from "./base.controller";
 
 export class StoreController extends BaseController {
 
-    @AllureStep(`[StoreController] getOrderById`)
+    @STEP(`[StoreController] getOrderById`)
     async getOrderById(orderId: number | string) {
         return (await this.request()
             .url(`store/order/${orderId}`)
@@ -12,7 +12,7 @@ export class StoreController extends BaseController {
         ).body
     }
 
-    @AllureStep(`[StoreController] getOrderById`)
+    @STEP(`[StoreController] getOrderById`)
     async placeOrder(order: Omit<definitions["Order"], "id" | "status">) {
         return (await this.request()
             .url(`store/order`)
@@ -22,7 +22,7 @@ export class StoreController extends BaseController {
         ).body
     }
 
-    @AllureStep(`[StoreController] getInventory`)
+    @STEP(`[StoreController] getInventory`)
     async getInventory() {
         return (await this.request()
             .url(`store/inventory`)

@@ -1,4 +1,3 @@
-# pet-store-tests-READY
+# how-to-write-api-tests-v2
 
 
-## TODO: write readme

@@ -1,3 +1,4 @@
+import { describe, it } from '../fixtures'
 import { strict as assert } from 'assert'
 import { definitions } from '../.temp/types';
 import { ApiClient } from '../api/client';
