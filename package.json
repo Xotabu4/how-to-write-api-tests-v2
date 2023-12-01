@@ -1,0 +1,28 @@
+{
+  "name": "pet-store-tests-ready",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "postinstall": "npm run pretest",
+    "pretest": "ts-node ./utils/generate-typings.ts",
+    "test": "mocha"
+  },
+  "author": "Oleksandr Khotemskyi <xotabu4@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/mocha": "8.2.0",
+    "@types/node": "14.14.25",
+    "@types/tough-cookie": "^4.0.0",
+    "allure-mocha": "^2.0.0-beta.9",
+    "dotenv": "^8.2.0",
+    "envalid": "^7.1.0",
+    "http-req-builder": "^1.1.0",
+    "mocha": "8.2.1",
+    "mocha-multi-reporters": "^1.5.1",
+    "openapi-typescript": "^3.0.1",
+    "response-openapi-validator": "^1.1.0",
+    "tough-cookie": "^4.0.0",
+    "ts-node": "9.1.1",
+    "typescript": "4.1.3"
+  }
+}
