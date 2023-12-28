@@ -1,10 +1,10 @@
-import { describe, it } from '../fixtures'
+import { test } from '@playwright/test'
 import { definitions } from "../.temp/types"
 import { ApiClient } from "../api/client"
 import { strict as assert } from "assert"
 
-describe('User', () => {
-    it('can register', async function () {
+test.describe('User', () => {
+    test('can register', async function () {
         const userToCreate: Omit<definitions['User'], 'id' | 'userStatus'> = {
             firstName: 'Test',
             lastName: 'Test',

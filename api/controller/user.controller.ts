@@ -1,11 +1,11 @@
 import { definitions, operations } from "../../.temp/types";
-import { STEP } from "../../utils/step";
+import { step } from "../../utils/step";
 import { JsonRequestWithValidation } from "../request";
 import { BaseController } from "./base.controller";
 
 export class UserController extends BaseController {
 
-    @STEP(`[UserController] register`)
+    @step(`[UserController] register`)
     async register(userToCreate: Omit<definitions['User'], "id" | "userStatus">) {
         return (await new JsonRequestWithValidation()
             .prefixUrl(new URL(this.options.prefixPath, this.options.prefixUrl))
@@ -18,7 +18,7 @@ export class UserController extends BaseController {
         ).body
     }
 
-    @STEP(`[UserController] login`)
+    @step(`[UserController] login`)
     async login(credentials: { username: string, password: string }) {
         return (
             await new JsonRequestWithValidation()

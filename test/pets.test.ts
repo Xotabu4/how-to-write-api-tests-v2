@@ -1,15 +1,15 @@
-import { describe, it } from '../fixtures'
+import { test } from '@playwright/test'
 import { strict as assert } from 'assert'
 import { definitions } from '../.temp/types';
 import { ApiClient } from '../api/client';
 
-describe('Pet', () => {
-    it('can be received by id', async function () {
+test.describe('Pet', () => {
+    test('can be received by id', async function () {
         const petResp = await ApiClient.unauthorized().pet.getById(1)
         assert(petResp.id == 1)
     })
 
-    it('can be received by status', async function () {
+    test('can be received by status', async function () {
         const client = ApiClient.unauthorized()
         let petResp = await client.pet.findByStatus('available')
         assert(petResp.length > 0)
@@ -30,14 +30,14 @@ describe('Pet', () => {
         assert(!petResp.some(pet => pet.status == 'sold'))
     })
 
-    it('can be received by tag', async function () {
+    test('can be received by tag', async function () {
         const client = ApiClient.unauthorized()
         const petResp = await client.pet.findByTags('tag1')
         assert(petResp.length > 0)
         assert(petResp.some(pet => pet.tags.some(tag => tag.name == 'tag1')))
     })
 
-    it('can be added, updated, and deleted', async function () {
+    test('can be added, updated, and deleted', async function () {
         const adminClient = await ApiClient.loginAs({ username: 'admin', password: 'admin' });
 
         const petToCreate: Omit<definitions['Pet'], "id"> = {

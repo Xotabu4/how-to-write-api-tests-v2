@@ -1,22 +1,19 @@
-import 'dotenv/config'
 import type { PlaywrightTestConfig } from '@playwright/test';
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+require('dotenv').config();
 
 const config: PlaywrightTestConfig = {
     testDir: './test',
     fullyParallel: false,
-    workers: process.env.CI ? 9 : undefined,
+    workers: 1,
     forbidOnly: process.env.CI ? true : undefined,
     timeout: 2 * 60 * 1000, // 5 minutes
-    reporter: [
-        // ['html'],
-        ['list'],
-    ],
     globalSetup: 'utils/generate-typings.ts',
-    // use: {
-    //     trace: {
-    //         mode: 'on',
-    //     },
-    // }
+    reporter: [
+        ['list'],
+        ['html'],
+    ],
 };
 
 export default config;

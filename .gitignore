@@ -1,3 +1,4 @@
 node_modules
 .temp
-xunit.xml
+playwright-report
+test-results

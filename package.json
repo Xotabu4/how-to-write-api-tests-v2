@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "npx playwright test .*\\.test\\.ts"
+    "test": "playwright test"
   },
   "author": "Oleksandr Khotemskyi <xotabu4@gmail.com>",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "envalid": "^7.1.0",
     "http-req-builder": "^1.1.0",
     "openapi-typescript": "^3.0.1",
-    "response-openapi-validator": "^1.1.0",
+    "response-openapi-validator": "1.1.0",
     "tough-cookie": "^4.0.0",
     "@playwright/test": "1.40.1"
   }
