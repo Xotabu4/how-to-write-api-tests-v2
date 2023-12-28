@@ -1,10 +1,10 @@
 import { URLSearchParams } from 'url';
 import { definitions, operations } from '../../.temp/types'
-import { AllureStep } from '../../utils/allureStep';
+import { step } from '../../utils/step';
 import { BaseController } from './base.controller';
 
 export class PetController extends BaseController {
-    @AllureStep(`[PetController] getById`)
+    @step(`[PetController] getById`)
     async getById(id: number | string) {
         return (
             await this.request()
@@ -13,7 +13,7 @@ export class PetController extends BaseController {
         ).body;
     }
 
-    @AllureStep(`[PetController] findByTags`)
+    @step(`[PetController] findByTags`)
     async findByTags(tags: string | string[]) {
         return (
             await this.request()
@@ -23,7 +23,7 @@ export class PetController extends BaseController {
         ).body;
     }
 
-    @AllureStep(`[PetController] findByStatus`)
+    @step(`[PetController] findByStatus`)
     async findByStatus(status: string | string[]) {
         return (
             await this.request()
@@ -33,7 +33,7 @@ export class PetController extends BaseController {
         ).body;
     }
 
-    @AllureStep(`[PetController] addNew`)
+    @step(`[PetController] addNew`)
     async addNew(pet: Omit<definitions['Pet'], "id">) {
         return (
             await this.request()
@@ -44,7 +44,7 @@ export class PetController extends BaseController {
         ).body;
     }
 
-    @AllureStep(`[PetController] update`)
+    @step(`[PetController] update`)
     async update(pet: definitions['Pet']) {
         return (
             await this.request()
@@ -55,7 +55,7 @@ export class PetController extends BaseController {
         ).body;
     }
 
-    @AllureStep(`[PetController] delete`)
+    @step(`[PetController] delete`)
     async delete(id: number | string) {
         return (
             await this.request()

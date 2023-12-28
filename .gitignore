@@ -1,3 +1,4 @@
 node_modules
 .temp
-allure-results
+playwright-report
+test-results

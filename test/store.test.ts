@@ -1,9 +1,10 @@
+import { test } from '@playwright/test'
 import { strict as assert } from 'assert'
 import { definitions } from '../.temp/types';
 import { ApiClient } from '../api/client';
 
-describe('Store', () => {
-    it('can return his inventory, and correctly updates statuses', async function () {
+test.describe('Store', () => {
+    test('can return his inventory, and correctly updates statuses', async function () {
         // Potential issue when running in parallel, and other threads will add pets as well.
         const adminClient = await ApiClient.loginAs({ username: 'admin', password: 'admin' });
         const inventory = await adminClient.store.getInventory();
@@ -22,7 +23,7 @@ describe('Store', () => {
         assert.equal(inventoryWithSoldAdded.sold, inventory.sold + 1, `Sold value in inventory must be increased by 1`)
     })
 
-    it('allows to place order by user, and admin can see created order', async function () {
+    test('allows to place order by user, and admin can see created order', async function () {
         const userClient = await ApiClient.loginAs({ username: 'user', password: 'user' })
         const order: Omit<definitions['Order'], 'id'> = {
             petId: 1,
