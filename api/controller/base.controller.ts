@@ -1,22 +1,30 @@
-import { BaseHttpRequest } from "http-req-builder";
-import type { CookieJar } from "tough-cookie";
+import { PWRequest } from "../request";
+import { APIRequestContext } from "@playwright/test";
 
 export type ControllerOptions = {
     token?: string,
-    cookieJar: CookieJar,
+    baseApiRequestContext?: APIRequestContext,
     prefixUrl: string,
     prefixPath: string,
-    RequestBuilder: new () => BaseHttpRequest
 }
 
 export class BaseController {
     constructor(protected readonly options: ControllerOptions) { }
-
     protected request() {
-        const preparedUrl = new URL(this.options.prefixPath, this.options.prefixUrl)
-        return new this.options.RequestBuilder()
-            .prefixUrl(preparedUrl)
-            .headers({ token: this.options.token })
-            .cookieJar(this.options.cookieJar)
+        const preparedUrl = new URL(
+            this.options.prefixPath.endsWith('/') ? this.options.prefixPath : `${this.options.prefixPath}/`,
+            this.options.prefixUrl
+        )
+
+        let preparedRequest: PWRequest = new PWRequest().prefixUrl(preparedUrl)
+
+        if (this.options.baseApiRequestContext) {
+            preparedRequest.apiContext(this.options.baseApiRequestContext)
+        }
+
+        if (this.options.token) {
+            return preparedRequest.headers({ token: this.options.token })
+        }
+        return preparedRequest
     }
 }

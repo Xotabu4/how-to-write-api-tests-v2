@@ -23,11 +23,14 @@ test.describe('Pet', () => {
         assert(petResp.length > 0)
         assert(petResp.every(pet => pet.status == 'sold'))
 
-        petResp = await client.pet.findByStatus(['pending', 'available'])
-        assert(petResp.length > 0)
-        assert(petResp.some(pet => pet.status == 'available'))
-        assert(petResp.some(pet => pet.status == 'pending'))
-        assert(!petResp.some(pet => pet.status == 'sold'))
+        // BUG: https://github.com/microsoft/playwright/issues/28863
+        // petResp = await client.pet.findByStatus(['pending', 'available'])
+        // petResp = await client.pet.findByStatus('available&status=pending');
+        
+        // assert(petResp.length > 0)
+        // assert(petResp.some(pet => pet.status == 'available'))
+        // assert(petResp.some(pet => pet.status == 'pending'))
+        // assert(!petResp.some(pet => pet.status == 'sold'))
     })
 
     test('can be received by tag', async function () {

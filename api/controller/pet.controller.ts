@@ -1,4 +1,3 @@
-import { URLSearchParams } from 'url';
 import { definitions, operations } from '../../.temp/types'
 import { step } from '../../utils/step';
 import { BaseController } from './base.controller';
@@ -14,21 +13,21 @@ export class PetController extends BaseController {
     }
 
     @step(`[PetController] findByTags`)
-    async findByTags(tags: string | string[]) {
+    async findByTags(tags: string) {
         return (
             await this.request()
                 .url('pet/findByTags')
-                .searchParams(new URLSearchParams({ tags }))
+                .searchParams({ tags })
                 .send<operations['findPetsByTags']['responses']['200']['schema']>()
         ).body;
     }
 
     @step(`[PetController] findByStatus`)
-    async findByStatus(status: string | string[]) {
+    async findByStatus(status: string) {
         return (
             await this.request()
                 .url(`pet/findByStatus`)
-                .searchParams(new URLSearchParams({ status }))
+                .searchParams({ status })
                 .send<operations['findPetsByStatus']['responses']['200']['schema']>()
         ).body;
     }
