@@ -14,6 +14,11 @@ const config: PlaywrightTestConfig = {
         ['list'],
         ['html'],
     ],
+    use: {
+        trace: {
+            mode: 'on'
+        }
+    }
 };
 
 export default config;
