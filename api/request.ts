@@ -1,45 +1,21 @@
 import { APIRequestContext, APIResponse, request } from '@playwright/test'
-import { BaseHttpRequest, JsonRequest } from "http-req-builder";
 import { ResponseValidator } from "response-openapi-validator";
 import { CONFIG } from "../config/env";
-import { CookieJar } from 'tough-cookie';
 
-// const responseValidator = new ResponseValidator({
-//     openApiSpecPath: CONFIG.PETSTORE_SWAGGER_URL,
-//     apiPathPrefix: CONFIG.PETSTORE_API_PREFIX_PATH,
-//     ajvOptions: {
-//         allErrors: true,
-//         verbose: true,
-//         jsonPointers: true,
-//         formats: {
-//             double: "[+-]?\\d*\\.?\\d+",
-//             int32: /^\d+$/,
-//             int64: /^\d+$/,
-//         },
-//     },
-// })
-
-// export class JsonRequestWithValidation extends JsonRequest {
-//     constructor() {
-//         super()
-//         this.options = {
-//             ...this.options,
-//         }
-//     }
-
-//     async send<T = any>() {
-//         // Example is simplified: in case 4xx/5xx validation won't be applied
-//         const response = await super.send<T>()
-
-//         await responseValidator.assertResponse({
-//             method: response.request?.options?.method,
-//             requestUrl: response?.request?.requestUrl,
-//             statusCode: response?.statusCode,
-//             body: response.body,
-//         });
-//         return response
-//     }
-// }
+const responseValidator: ResponseValidator = new ResponseValidator({
+    openApiSpecPath: CONFIG.PETSTORE_SWAGGER_URL,
+    apiPathPrefix: CONFIG.PETSTORE_API_PREFIX_PATH,
+    ajvOptions: {
+        allErrors: true,
+        verbose: true,
+        jsonPointers: true,
+        formats: {
+            double: "[+-]?\\d*\\.?\\d+",
+            int32: /^\d+$/,
+            int64: /^\d+$/,
+        },
+    },
+})
 
 type Method = "GET" | "POST" | "PUT" | "PATCH" | "HEAD" | "DELETE" | "OPTIONS" | "TRACE" | "get" | "post" | "put" | "patch" | "head" | "delete" | "options" | "trace"
 
@@ -114,9 +90,18 @@ export class PWRequest {
             params: this.options.params,
             failOnStatusCode: true,
         });
+        
+        const responseBody = await response.json();
+
+        await responseValidator.assertResponse({
+            method: this.options.method ?? 'GET',
+            requestUrl: response.url(),
+            statusCode: response.status(),
+            body: responseBody,
+        });
 
         return {
-            body: await response.json() as T,
+            body: responseBody as T,
             headers: response.headers()
         }
     }
