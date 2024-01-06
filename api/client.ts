@@ -1,9 +1,7 @@
 import { PetController } from "./controller/pet.controller";
 import { StoreController } from "./controller/store.controller";
 import { UserController } from "./controller/user.controller";
-import { CookieJar } from 'tough-cookie';
 import { CONFIG } from "../config/env";
-import { JsonRequestWithValidation } from "./request";
 import type { ControllerOptions } from "./controller/base.controller";
 
 export class ApiClient {
@@ -13,10 +11,8 @@ export class ApiClient {
 
     constructor(options?: Partial<ControllerOptions>) {
         const defaultOptions = {
-            cookieJar: new CookieJar(),
             prefixUrl: CONFIG.PETSTORE_URL,
             prefixPath: CONFIG.PETSTORE_API_PREFIX_PATH,
-            RequestBuilder: JsonRequestWithValidation
         }
         const mergedOptions = {
             ...defaultOptions,

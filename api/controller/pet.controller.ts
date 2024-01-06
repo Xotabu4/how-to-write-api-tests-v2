@@ -15,20 +15,20 @@ export class PetController extends BaseController {
 
     @step(`[PetController] findByTags`)
     async findByTags(tags: string | string[]) {
+        const searchParams = new URLSearchParams({ tags }).toString()
         return (
             await this.request()
-                .url('pet/findByTags')
-                .searchParams(new URLSearchParams({ tags }))
+                .url(`pet/findByTags?${searchParams}`)
                 .send<operations['findPetsByTags']['responses']['200']['schema']>()
         ).body;
     }
 
     @step(`[PetController] findByStatus`)
     async findByStatus(status: string | string[]) {
+        const searchParams = new URLSearchParams({ status }).toString()
         return (
             await this.request()
-                .url(`pet/findByStatus`)
-                .searchParams(new URLSearchParams({ status }))
+                .url(`pet/findByStatus?${searchParams}`)
                 .send<operations['findPetsByStatus']['responses']['200']['schema']>()
         ).body;
     }

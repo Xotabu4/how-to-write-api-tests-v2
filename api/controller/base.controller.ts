@@ -1,22 +1,25 @@
-import { BaseHttpRequest } from "http-req-builder";
-import type { CookieJar } from "tough-cookie";
+import { PWRequest } from "../request";
 
 export type ControllerOptions = {
     token?: string,
-    cookieJar: CookieJar,
     prefixUrl: string,
     prefixPath: string,
-    RequestBuilder: new () => BaseHttpRequest
 }
 
 export class BaseController {
     constructor(protected readonly options: ControllerOptions) { }
 
     protected request() {
-        const preparedUrl = new URL(this.options.prefixPath, this.options.prefixUrl)
-        return new this.options.RequestBuilder()
-            .prefixUrl(preparedUrl)
-            .headers({ token: this.options.token })
-            .cookieJar(this.options.cookieJar)
+        const preparedUrl = new URL(
+            this.options.prefixPath.endsWith('/') ? this.options.prefixPath : `${this.options.prefixPath}/`,
+            this.options.prefixUrl
+        )
+        const preparedRequest = new PWRequest().prefixUrl(preparedUrl)
+        
+        if (this.options.token) {
+            return preparedRequest.headers({ token: this.options.token })
+        }
+
+        return preparedRequest;
     }
 }
