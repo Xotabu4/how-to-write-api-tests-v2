@@ -1,21 +1,21 @@
 import { request } from "@playwright/test";
-// import { ResponseValidator } from "response-openapi-validator";
-// import { CONFIG } from "../config/env";
+import { ResponseValidator } from "response-openapi-validator";
+import { CONFIG } from "../config/env";
 
-// const responseValidator = new ResponseValidator({
-//     openApiSpecPath: CONFIG.PETSTORE_SWAGGER_URL,
-//     apiPathPrefix: CONFIG.PETSTORE_API_PREFIX_PATH,
-//     ajvOptions: {
-//         allErrors: true,
-//         verbose: true,
-//         jsonPointers: true,
-//         formats: {
-//             double: "[+-]?\\d*\\.?\\d+",
-//             int32: /^\d+$/,
-//             int64: /^\d+$/,
-//         },
-//     },
-// })
+const responseValidator = new ResponseValidator({
+    openApiSpecPath: CONFIG.PETSTORE_SWAGGER_URL,
+    apiPathPrefix: CONFIG.PETSTORE_API_PREFIX_PATH,
+    ajvOptions: {
+        allErrors: true,
+        verbose: true,
+        jsonPointers: true,
+        formats: {
+            double: "[+-]?\\d*\\.?\\d+",
+            int32: /^\d+$/,
+            int64: /^\d+$/,
+        },
+    },
+})
 
 export class PWRequest {
     protected options: Partial<{
@@ -65,8 +65,17 @@ export class PWRequest {
                 ...this.options
             });
 
+            const responseBody = await response.json()
+
+            await responseValidator.assertResponse({
+                method: this.options.method ?? 'GET',
+                requestUrl: response.url(),
+                statusCode: response.status(),
+                body: responseBody,
+            });
+
             return {
-                body: await response.json() as T,
+                body: responseBody as T,
                 headers: response.headers()
             }
         }
