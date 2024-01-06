@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { Page, test } from '@playwright/test'
 import { definitions } from "../.temp/types"
 import { ApiClient } from "../api/client"
 import { strict as assert } from "assert"

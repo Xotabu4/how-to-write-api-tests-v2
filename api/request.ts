@@ -1,8 +1,6 @@
-import { APIRequestContext, APIResponse, request } from '@playwright/test'
-import { BaseHttpRequest, JsonRequest } from "http-req-builder";
-import { ResponseValidator } from "response-openapi-validator";
-import { CONFIG } from "../config/env";
-import { CookieJar } from 'tough-cookie';
+import { request } from '@playwright/test'
+// import { ResponseValidator } from "response-openapi-validator";
+// import { CONFIG } from "../config/env";
 
 // const responseValidator = new ResponseValidator({
 //     openApiSpecPath: CONFIG.PETSTORE_SWAGGER_URL,
@@ -45,7 +43,6 @@ type Method = "GET" | "POST" | "PUT" | "PATCH" | "HEAD" | "DELETE" | "OPTIONS" |
 
 export class PWRequest {
     protected options: Partial<{
-        apiContext?: APIRequestContext
         prefixUrl: string | URL
         method: Method
         headers: Record<string, string>
@@ -54,16 +51,6 @@ export class PWRequest {
         }
         body: any
     }> & { url: string | URL } = { url: '' };
-
-    /**
-     * Base api context to extend. Used to share cookies
-     * @param apiContext 
-     * @returns 
-     */
-    public apiContext(apiContext: APIRequestContext) {
-        this.options.apiContext = apiContext;
-        return this
-    }
 
     public prefixUrl(url: string | URL): this {
         this.options.prefixUrl = url
@@ -104,9 +91,10 @@ export class PWRequest {
         return this;
     };
     public async send<T = never>() {
-        const reqContext = this.options.apiContext ?? await request.newContext({
+        const reqContext = await request.newContext({
             baseURL: this.options.prefixUrl?.toString()
         });
+
         const response = await reqContext.fetch(this.options.url.toString(), {
             method: this.options.method,
             data: this.options.body,
