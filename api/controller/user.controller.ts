@@ -16,11 +16,10 @@ export class UserController extends BaseController {
 
     @step(`[UserController] login`)
     async login(credentials: { username: string, password: string }) {
-        return (
-            await this.request()
-                .url(`user/login`)
-                .searchParams(credentials)
-                .send<operations['loginUser']['responses']['200']['schema']>()
+        return (await this.request()
+            .url(`user/login`)
+            .searchParams(credentials)
+            .send<operations['loginUser']['responses']['200']['schema']>()
         ).headers['token'] as string
     }
 }
