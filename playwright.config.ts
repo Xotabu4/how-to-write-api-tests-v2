@@ -1,4 +1,5 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
+import { BASE_URL } from './config/env';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 require('dotenv').config();
@@ -15,6 +16,7 @@ const config: PlaywrightTestConfig = {
         ['html'],
     ],
     use: {
+        baseURL: BASE_URL.toString(),
         trace: {
             mode: 'on'
         }

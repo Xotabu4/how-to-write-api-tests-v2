@@ -1,4 +1,4 @@
-import { request } from "@playwright/test";
+import { APIRequestContext, request } from "@playwright/test";
 import { ResponseValidator } from "response-openapi-validator";
 import { CONFIG } from "../config/env";
 
@@ -26,6 +26,8 @@ export class PWRequest {
         params: { [key: string]: string | number | boolean }
         data: any
     }> = {}
+
+    constructor(protected apiRequestContext?: APIRequestContext) {}
 
     prefixUrl(prefixUrl: string | URL): this {
         this.options.prefixUrl = prefixUrl.toString();
@@ -57,11 +59,13 @@ export class PWRequest {
     }
     async send<T = never>() {
         if (this.options.url) {
-            const reqContext = await request.newContext({
-                baseURL: this.options.prefixUrl
-            });
+            if (!this.apiRequestContext) {
+                this.apiRequestContext = await request.newContext({
+                    baseURL: this.options.prefixUrl
+                });
+            }
 
-            const response = await reqContext.fetch(this.options.url, {
+            const response = await this.apiRequestContext.fetch(this.options.url, {
                 ...this.options
             });
 

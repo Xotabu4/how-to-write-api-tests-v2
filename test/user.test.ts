@@ -1,10 +1,9 @@
-import { test } from '@playwright/test'
 import { definitions } from "../.temp/types"
-import { ApiClient } from "../api/client"
 import { strict as assert } from "assert"
+import { apiTest } from '../fixtures'
 
-test.describe('User', () => {
-    test('can register', async function () {
+apiTest.describe('User', () => {
+    apiTest('can register', async function ({ guest }) {
         const userToCreate: Omit<definitions['User'], 'id' | 'userStatus'> = {
             firstName: 'Test',
             lastName: 'Test',
@@ -14,7 +13,7 @@ test.describe('User', () => {
             password: '123456'
         }
 
-        const createdUser = await ApiClient.unauthorized().user.register(userToCreate)
+        const createdUser = await guest.user.register(userToCreate)
 
         assert.deepEqual(
             createdUser,

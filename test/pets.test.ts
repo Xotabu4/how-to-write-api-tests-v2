@@ -1,48 +1,41 @@
-import { test } from '@playwright/test'
 import { strict as assert } from 'assert'
 import { definitions } from '../.temp/types';
-import { ApiClient } from '../api/client';
+import { apiTest } from '../fixtures';
 
-test.describe('Pet', () => {
-    test('can be received by id', async function () {
-        const petResp = await ApiClient.unauthorized().pet.getById(1)
+apiTest.describe('Pet', () => {
+    apiTest('can be received by id', async function ({ guest }) {
+        const petResp = await guest.pet.getById(1)
         assert(petResp.id == 1)
     })
 
-    test('can be received by status', async function () {
-        const client = ApiClient.unauthorized()
-        let petResp = await client.pet.findByStatus('available')
+    apiTest('can be received by status', async function ({ guest }) {
+        let petResp = await guest.pet.findByStatus('available')
         assert(petResp.length > 0)
         assert(petResp.every(pet => pet.status == 'available'))
 
-        petResp = await client.pet.findByStatus('pending')
+        petResp = await guest.pet.findByStatus('pending')
         assert(petResp.length > 0)
         assert(petResp.every(pet => pet.status == 'pending'))
 
-        petResp = await client.pet.findByStatus('sold')
+        petResp = await guest.pet.findByStatus('sold')
         assert(petResp.length > 0)
         assert(petResp.every(pet => pet.status == 'sold'))
 
-        // BUG: https://github.com/microsoft/playwright/issues/28863
-        // petResp = await client.pet.findByStatus(['pending', 'available'])
-        // petResp = await client.pet.findByStatus('available&status=pending');
+        petResp = await guest.pet.findByStatus(['pending', 'available'])
         
-        // assert(petResp.length > 0)
-        // assert(petResp.some(pet => pet.status == 'available'))
-        // assert(petResp.some(pet => pet.status == 'pending'))
-        // assert(!petResp.some(pet => pet.status == 'sold'))
+        assert(petResp.length > 0)
+        assert(petResp.some(pet => pet.status == 'available'))
+        assert(petResp.some(pet => pet.status == 'pending'))
+        assert(!petResp.some(pet => pet.status == 'sold'))
     })
 
-    test('can be received by tag', async function () {
-        const client = ApiClient.unauthorized()
-        const petResp = await client.pet.findByTags('tag1')
+    apiTest('can be received by tag', async function ({ guest }) {
+        const petResp = await guest.pet.findByTags('tag1')
         assert(petResp.length > 0)
         assert(petResp.some(pet => pet.tags.some(tag => tag.name == 'tag1')))
     })
 
-    test('can be added, updated, and deleted', async function () {
-        const adminClient = await ApiClient.loginAs({ username: 'admin', password: 'admin' });
-
+    apiTest('can be added, updated, and deleted', async function ({ admin }) {
         const petToCreate: Omit<definitions['Pet'], "id"> = {
             category: {
                 id: 0,
@@ -61,7 +54,7 @@ test.describe('Pet', () => {
             status: "available"
         }
 
-        const addedPet = await adminClient.pet.addNew(petToCreate)
+        const addedPet = await admin.pet.addNew(petToCreate)
         assert.deepEqual(
             addedPet,
             {
@@ -70,7 +63,7 @@ test.describe('Pet', () => {
             },
             `Expected created pet to match data used upon creation`
         )
-        const foundAddedPet = await adminClient.pet.getById(addedPet.id)
+        const foundAddedPet = await admin.pet.getById(addedPet.id)
         assert.deepEqual(
             foundAddedPet,
             {
@@ -97,7 +90,7 @@ test.describe('Pet', () => {
             ],
             status: "pending"
         }
-        const updatedPet = await adminClient.pet.update(newerPet)
+        const updatedPet = await admin.pet.update(newerPet)
         assert.deepEqual(
             updatedPet,
             {
@@ -106,7 +99,7 @@ test.describe('Pet', () => {
             },
             `Expected updated pet to equal data used upon updating`
         )
-        await adminClient.pet.delete(addedPet.id)
+        await admin.pet.delete(addedPet.id)
         // TODO: assert 404 error on attempt to get pet that was deleted
     })
 }) 

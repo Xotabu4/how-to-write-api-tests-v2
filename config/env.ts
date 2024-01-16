@@ -14,3 +14,8 @@ export const CONFIG = cleanEnv(process.env, {
         desc: 'URL to SWAGGER JSON to be tested'
     }),
 })
+
+export const BASE_URL = new URL(
+    CONFIG.PETSTORE_API_PREFIX_PATH.endsWith('/') ? CONFIG.PETSTORE_API_PREFIX_PATH : `${CONFIG.PETSTORE_API_PREFIX_PATH}/`,
+    CONFIG.PETSTORE_URL
+)

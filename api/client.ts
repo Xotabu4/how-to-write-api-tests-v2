@@ -23,13 +23,13 @@ export class ApiClient {
         this.user = new UserController(mergedOptions)
     }
 
-    static unauthorized() {
-        return new ApiClient();
+    static unauthorized(options?: Partial<ControllerOptions>) {
+        return new ApiClient(options);
     }
 
-    static async loginAs(credentials: { username: string, password: string }) {
+    static async loginAs(credentials: { username: string, password: string }, options?: Partial<ControllerOptions>) {
         return new ApiClient({
-            token: await new ApiClient().user.login(credentials)
+            token: await new ApiClient(options).user.login(credentials)
         })
     }
 
