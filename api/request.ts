@@ -59,7 +59,8 @@ export class PWRequest {
     }
     async send<T = never>() {
         if (this.options.url) {
-            if (!this.apiRequestContext) {
+            if (this.apiRequestContext === undefined) {
+                console.log('new context')
                 this.apiRequestContext = await request.newContext({
                     baseURL: this.options.prefixUrl
                 });

@@ -29,7 +29,8 @@ export class ApiClient {
 
     static async loginAs(credentials: { username: string, password: string }, options?: Partial<ControllerOptions>) {
         return new ApiClient({
-            token: await new ApiClient(options).user.login(credentials)
+            ...options,
+            token: await new ApiClient(options).user.login(credentials),
         })
     }
 
