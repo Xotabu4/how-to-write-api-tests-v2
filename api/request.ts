@@ -19,7 +19,6 @@ const responseValidator = new ResponseValidator({
 
 export class PWRequest {
     protected options: Partial<{
-        prefixUrl: string
         url: string,
         method: string,
         headers: Record<string, string>,
@@ -27,12 +26,8 @@ export class PWRequest {
         data: any
     }> = {}
 
-    constructor(protected apiRequestContext?: APIRequestContext) {}
+    constructor(protected apiRequestContext: APIRequestContext) {}
 
-    prefixUrl(prefixUrl: string | URL): this {
-        this.options.prefixUrl = prefixUrl.toString();
-        return this;
-    }
     url(url: string | URL): this {
         this.options.url = url.toString();
         return this;
@@ -59,13 +54,6 @@ export class PWRequest {
     }
     async send<T = never>() {
         if (this.options.url) {
-            if (this.apiRequestContext === undefined) {
-                console.log('new context')
-                this.apiRequestContext = await request.newContext({
-                    baseURL: this.options.prefixUrl
-                });
-            }
-
             const response = await this.apiRequestContext.fetch(this.options.url, {
                 ...this.options
             });
